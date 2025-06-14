@@ -35,7 +35,7 @@ mesh = SubResource("BoxMesh_25vv4")
 skeleton = NodePath("../../..")
 
 [node name="Car" parent="." instance=ExtResource("1_jeodi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.47272, 0.846805, 22.9875)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.47272, 4.95957, 22.9875)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8.29607, 0.721469, 22.8123)
