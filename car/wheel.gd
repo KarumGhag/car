@@ -42,48 +42,32 @@ func _physics_process(_delta):
 	if not is_colliding():
 		return
 	
-	#------Suspension------
-
-	upDir = global_transform.basis.y.normalized()
-
-	#Vector3(0, 1, 0).cross(Vector(1, 0 ,0 )) returns Vector3(0, 0, -1)
-	wheelVelocity = car.linear_velocity + car.angular_velocity.cross(applyPos)
-
-	lateralSpeed = wheelVelocity.dot(lateralDir)
-
-	lateralFrictionForce = -lateralSpeed * grip * lateralDir
-
-
-
-	#gets positon of the wheel and the position relative to the car
 	origin = global_position
 	applyPos = origin - car.global_position
-	#where the ray cast collided
 	collisionPoint = get_collision_point()
 
+	# Get updated spring direction
+	upDir = (origin - collisionPoint).normalized()
 
+	#  Update lateralDir now that upDir changed
+	forwardDir = global_transform.basis.z.normalized()
+	lateralDir = upDir.cross(forwardDir).normalized()
 
+	# Wheel velocity at this wheel
+	wheelVelocity = car.linear_velocity + car.angular_velocity.cross(applyPos)
+	lateralSpeed = wheelVelocity.dot(lateralDir)
+	lateralFrictionForce = -lateralSpeed * grip * lateralDir
 
-	#gets the length of the raycast
+	# Suspension forces
 	length = (origin - collisionPoint).length()
-	#gets how far off the extension the length of the spring is
 	extension = restLen - length
+	speed = wheelVelocity.dot(upDir)
 
-	#gets how fast the car is moving vertically
-	speed = car.linear_velocity.dot(upDir)
-
-	#hookes law, Force = constant * extension
 	springForce = springConst * extension
-	#makes it bouce less depending on how much its moving
 	dampForce = -speed * damping
-
-	#calculates overall force and limits it, turns it into a vector 3
 	springForce = clamp(springForce + dampForce, -maxForce, maxForce)
-	overallForce = (upDir * springForce) + lateralFrictionForce
 
-
-
-	#applies it, applyPos is needed bc apply_force() second param takes it relative to the location of the rigidbody not at a specific point in world
+	overallForce = upDir * springForce + lateralFrictionForce
 	car.apply_force(overallForce, applyPos)
 
 
