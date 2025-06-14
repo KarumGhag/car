@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://drf7lmloermxr"]
+
+[ext_resource type="Script" uid="uid://ds73tl2s23x07" path="res://car/car.gd" id="1_dxy33"]
+[ext_resource type="Script" uid="uid://bi7u31rxx2aq4" path="res://car/wheel.gd" id="2_dxy33"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_33qfd"]
+size = Vector3(2.5, 0.5, 5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_33qfd"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33qfd"]
+size = Vector3(2.5, 0.5, 5)
+
+[node name="Car" type="RigidBody3D"]
+mass = 50.0
+script = ExtResource("1_dxy33")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0242453, -0.0192142, -0.00128365)
+mesh = SubResource("BoxMesh_33qfd")
+surface_material_override/0 = SubResource("StandardMaterial3D_33qfd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0118599, -0.0008111, -0.00597334)
+shape = SubResource("BoxShape3D_33qfd")
+
+[node name="Wheels" type="Node3D" parent="."]
+
+[node name="FrontLeft" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0, -2.45)
+target_position = Vector3(0, -1.5, 0)
+script = ExtResource("2_dxy33")
+car = NodePath("../..")
+
+[node name="FrontRight" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, -2.45)
+target_position = Vector3(0, -1.5, 0)
+script = ExtResource("2_dxy33")
+car = NodePath("../..")
+
+[node name="BackLeft" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.20003, 2.38419e-07, 2.43718)
+target_position = Vector3(0, -1.5, 0)
+script = ExtResource("2_dxy33")
+car = NodePath("../..")
+
+[node name="BackRight" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19997, 2.38419e-07, 2.43718)
+target_position = Vector3(0, -1.5, 0)
+script = ExtResource("2_dxy33")
+car = NodePath("../..")

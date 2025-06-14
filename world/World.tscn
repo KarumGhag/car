@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://bebimvxb73a3k"]
+
+[ext_resource type="PackedScene" uid="uid://drf7lmloermxr" path="res://car/car.tscn" id="1_jeodi"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_25vv4"]
+
+[sub_resource type="Sky" id="Sky_jeodi"]
+sky_material = SubResource("ProceduralSkyMaterial_25vv4")
+
+[sub_resource type="Environment" id="Environment_1tnoa"]
+background_mode = 2
+sky = SubResource("Sky_jeodi")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jeodi"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_25vv4"]
+size = Vector3(100, 1, 100)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1tnoa")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 0.104528, 0.994522, 0, -0.994522, 0.104528, 0, 43.4012, 52.087)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="WorldEnvironment"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldEnvironment/StaticBody3D"]
+shape = SubResource("BoxShape3D_jeodi")
+
+[node name="Floor" type="MeshInstance3D" parent="WorldEnvironment/StaticBody3D"]
+mesh = SubResource("BoxMesh_25vv4")
+skeleton = NodePath("../../..")
+
+[node name="Car" parent="." instance=ExtResource("1_jeodi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.47272, 0.846805, 22.9875)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8.29607, 0.721469, 22.8123)

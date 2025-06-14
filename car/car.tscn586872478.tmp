@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://drf7lmloermxr"]
+
+[ext_resource type="Texture2D" uid="uid://b06n87vueihkh" path="res://icon.svg" id="1_7822p"]
+[ext_resource type="Script" uid="uid://cnd6n857xy65p" path="res://car/car.gd" id="1_dxy33"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uoj53"]
+size = Vector2(128, 42)
+
+[node name="Node2D" type="RigidBody2D" node_paths=PackedStringArray("center", "front", "back")]
+gravity_scale = 0.0
+script = ExtResource("1_dxy33")
+center = NodePath("Center")
+front = NodePath("Front")
+back = NodePath("Back")
+
+[node name="Icon" type="Sprite2D" parent="."]
+scale = Vector2(1, 0.328125)
+texture = ExtResource("1_7822p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_uoj53")
+
+[node name="Front" type="Node2D" parent="."]
+position = Vector2(50, 0)
+
+[node name="Center" type="Node2D" parent="."]
+
+[node name="Back" type="Node2D" parent="."]
+position = Vector2(-50, 0)
