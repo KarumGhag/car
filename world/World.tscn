@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bebimvxb73a3k"]
+[gd_scene load_steps=11 format=3 uid="uid://bebimvxb73a3k"]
 
-[ext_resource type="PackedScene" uid="uid://drf7lmloermxr" path="res://car/car.tscn" id="1_jeodi"]
+[ext_resource type="Texture2D" uid="uid://k7b0360svs3x" path="res://addons/kenney_prototype_textures/dark/texture_08.png" id="1_1tnoa"]
+[ext_resource type="PackedScene" uid="uid://c6yunir026dec" path="res://newcar/new_car.tscn" id="2_1tnoa"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_25vv4"]
 
@@ -16,6 +17,17 @@ size = Vector3(100, 1, 100)
 
 [sub_resource type="BoxMesh" id="BoxMesh_25vv4"]
 size = Vector3(100, 1, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qcaji"]
+albedo_texture = ExtResource("1_1tnoa")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1tnoa"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qcaji"]
+size = Vector3(10, 1, 10)
 
 [node name="Node3D" type="Node3D"]
 
@@ -33,10 +45,18 @@ shape = SubResource("BoxShape3D_jeodi")
 [node name="Floor" type="MeshInstance3D" parent="WorldEnvironment/StaticBody3D"]
 mesh = SubResource("BoxMesh_25vv4")
 skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_qcaji")
 
-[node name="Car" parent="." instance=ExtResource("1_jeodi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.47272, 4.95957, 22.9875)
+[node name="StaticBody3D2" type="StaticBody3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 0.961011, -0.27651, 0, 0.27651, 0.961011, 0, -4.67544, 1.99959)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.901077, 0.433659, 0, -0.433659, 0.901077, -1.43947, 5.80505, 27.6536)
-fov = 120.938
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldEnvironment/StaticBody3D2"]
+shape = SubResource("BoxShape3D_1tnoa")
+
+[node name="Floor" type="MeshInstance3D" parent="WorldEnvironment/StaticBody3D2"]
+mesh = SubResource("BoxMesh_qcaji")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_qcaji")
+
+[node name="NewCar" parent="." instance=ExtResource("2_1tnoa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25302, 2.71696, 3.22499)

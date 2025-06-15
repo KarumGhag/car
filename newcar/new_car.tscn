@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://c6yunir026dec"]
+
+[ext_resource type="Script" uid="uid://cyre6qkwo1x2y" path="res://newcar/new_car.gd" id="1_lai87"]
+[ext_resource type="Script" uid="uid://dgatqknjoakay" path="res://newcar/newWheels.gd" id="2_juohu"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2th2i"]
+size = Vector3(3, 0.5, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lai87"]
+size = Vector3(3, 0.5, 2)
+
+[node name="NewCar" type="RigidBody3D" node_paths=PackedStringArray("FL", "FR", "BL", "BR")]
+mass = 50.0
+script = ExtResource("1_lai87")
+FL = NodePath("FrontLeft")
+FR = NodePath("FrontRight")
+BL = NodePath("BackLeft")
+BR = NodePath("BackRight")
+
+[node name="CarBody" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_2th2i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_lai87")
+
+[node name="FrontLeft" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -1)
+script = ExtResource("2_juohu")
+car = NodePath("..")
+springConst = 400.0
+dampConst = 50.0
+
+[node name="FrontRight" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.50758, 0.0150485, 1.00145)
+script = ExtResource("2_juohu")
+car = NodePath("..")
+springConst = 400.0
+dampConst = 50.0
+
+[node name="BackLeft" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.49547, 0.00898743, -0.999132)
+script = ExtResource("2_juohu")
+car = NodePath("..")
+springConst = 400.0
+dampConst = 50.0
+
+[node name="BackRight" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.50583, -0.00119901, 0.968862)
+script = ExtResource("2_juohu")
+car = NodePath("..")
+springConst = 400.0
+dampConst = 50.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, -4.8579, 0.806776, 0.00586677)

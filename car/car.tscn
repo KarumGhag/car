@@ -1,20 +1,28 @@
-[gd_scene load_steps=6 format=3 uid="uid://drf7lmloermxr"]
+[gd_scene load_steps=7 format=3 uid="uid://drf7lmloermxr"]
 
 [ext_resource type="Script" uid="uid://ds73tl2s23x07" path="res://car/car.gd" id="1_dxy33"]
 [ext_resource type="Script" uid="uid://bi7u31rxx2aq4" path="res://car/wheel.gd" id="2_dxy33"]
+[ext_resource type="Texture2D" uid="uid://45csf33q75hd" path="res://addons/kenney_prototype_textures/orange/texture_09.png" id="2_hkabp"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_33qfd"]
 size = Vector3(2.5, 0.5, 5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_33qfd"]
-albedo_color = Color(0, 0, 1, 1)
+albedo_texture = ExtResource("2_hkabp")
+uv1_triplanar = true
+uv2_triplanar = true
+uv2_world_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_33qfd"]
 size = Vector3(2.5, 0.5, 5)
 
-[node name="Car" type="RigidBody3D"]
+[node name="Car" type="RigidBody3D" node_paths=PackedStringArray("frontLeftWheel", "frontRightWheel", "backLeftWheel", "backRightWheel")]
 mass = 50.0
 script = ExtResource("1_dxy33")
+frontLeftWheel = NodePath("Wheels/FrontLeft")
+frontRightWheel = NodePath("Wheels/FrontRight")
+backLeftWheel = NodePath("Wheels/BackLeft")
+backRightWheel = NodePath("Wheels/BackRight")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0242453, -0.0192142, -0.00128365)
@@ -29,26 +37,25 @@ shape = SubResource("BoxShape3D_33qfd")
 
 [node name="FrontLeft" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0, -2.45)
-target_position = Vector3(0, -1.5, 0)
 script = ExtResource("2_dxy33")
 car = NodePath("../..")
+isMotor = true
 
 [node name="FrontRight" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, -2.45)
-target_position = Vector3(0, -1.5, 0)
 script = ExtResource("2_dxy33")
 car = NodePath("../..")
+isMotor = true
 
 [node name="BackLeft" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.20003, 2.38419e-07, 2.43718)
-target_position = Vector3(0, -1.5, 0)
 script = ExtResource("2_dxy33")
 car = NodePath("../..")
-isMotor = true
 
 [node name="BackRight" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19997, 2.38419e-07, 2.43718)
-target_position = Vector3(0, -1.5, 0)
 script = ExtResource("2_dxy33")
 car = NodePath("../..")
-isMotor = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 4.56082, 8.40539)

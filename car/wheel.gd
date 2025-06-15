@@ -4,7 +4,7 @@ class_name Wheels
 
 @export var car : CarClass
 
-var restLen: float = 1.5
+var restLen: float = 1
 var length : float
 var extension : float
 var collisionPoint : Vector3
@@ -28,7 +28,6 @@ var springSpeed : float
 
 var applyPos : Vector3
 
-
 #------LateralFriction------
 var wheelVelocity : Vector3
 var lateralSpeed : float
@@ -39,7 +38,7 @@ var lateralFrictionForce : Vector3
 
 
 #-----Acceleration---------
-var accerlation : float = 100
+var accerlation : float = 500
 @export var isMotor : bool
 
 var forwardsForceMag : float = 0
@@ -47,29 +46,26 @@ var forwardsForce : Vector3 = Vector3.ZERO
 
 var targetDir : int = 0
 
-func _physics_process(_delta):
-	if not is_colliding():
-		return
-	
+var projectedForwardsForce : Vector3 = Vector3.ZERO
+
+#------Turning------
+var turnSpeed : float = 2
+var maxTurnDegrees : float = 25
+
+var turnInput : int
+
+func setValues() -> void:
 	origin = global_position
 	applyPos = origin - car.global_position
 	collisionPoint = get_collision_point()
 
-	# Get updated spring direction
 	upDir = (origin - collisionPoint).normalized()
-	forwardDir = -global_transform.basis.z.normalized()
-	lateralDir = upDir.cross(-forwardDir).normalized()
-
-	#-----Lateral friction-----
-
-	# Wheel velocity at this wheel
+	forwardDir = car.getForwardDir()
+	lateralDir = forwardDir.cross(upDir).normalized()
+	
 	wheelVelocity = car.linear_velocity + car.angular_velocity.cross(applyPos)
-	lateralSpeed = wheelVelocity.dot(lateralDir)
-	lateralFrictionForce = -lateralSpeed * grip * lateralDir
 
-
-	#------Suspension--------
-
+func getSpringForce() -> Vector3:
 	length = (origin - collisionPoint).length()
 	extension = restLen - length
 	springSpeed = wheelVelocity.dot(upDir)
@@ -79,16 +75,37 @@ func _physics_process(_delta):
 
 	springForce = clamp(springForce + dampForce, -maxSuspension, maxSuspension)
 
-	#-----Acceleration------
+	return springForce * upDir
 
-	if isMotor:
-		targetDir = Input.get_axis("Decelerate", "Accelerate")
-		forwardsForce = forwardDir * accerlation * targetDir
-
-
-	overallForce = (upDir * springForce) + lateralFrictionForce + forwardsForce
-	car.apply_force(overallForce, applyPos)
-
-
-	#print(overallForce)
+func getLateralFriction() -> Vector3:
+	# Wheel velocity at this wheel
 	
+	lateralSpeed = wheelVelocity.dot(lateralDir)
+	lateralFrictionForce = -lateralSpeed * grip * lateralDir
+
+	return lateralFrictionForce
+
+func getAccelForce() -> Vector3:
+	targetDir = Input.get_axis("Decelerate", "Accelerate")
+	forwardsForce = forwardDir * accerlation * targetDir
+
+	if targetDir:
+		var normal = get_collision_normal()
+		projectedForwardsForce = forwardsForce - normal * forwardsForce.dot(normal)
+	else:
+		projectedForwardsForce *= 0
+	
+	return projectedForwardsForce
+
+func applyForce() -> void:
+	setValues()
+	overallForce = getSpringForce() + getLateralFriction() 
+	if isMotor:
+		overallForce += getAccelForce()
+
+	car.apply_force(overallForce, applyPos)
+	DebugDraw3D.draw_arrow_ray(origin, forwardDir, 1.5, Color.GREEN)
+	DebugDraw3D.draw_arrow_ray(origin, lateralDir, 1.5, Color.BLUE)
+	DebugDraw3D.draw_arrow_ray(origin, upDir, 1.5, Color.YELLOW)
+
+	print(upDir, forwardDir, lateralDir)
