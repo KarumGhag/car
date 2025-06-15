@@ -19,12 +19,12 @@ var lateralDir = upDir.cross(forwardDir).normalized()
 
 var origin : Vector3 = Vector3.ZERO
 
-var maxForce: float = 1000.0
+var maxSuspension: float = 1000.0
 var springForce : float
 var dampForce : float
 var overallForce : Vector3
 var forceVec : Vector3
-var speed : float
+var springSpeed : float
 
 var applyPos : Vector3
 
@@ -38,6 +38,15 @@ var grip : float = 500
 var lateralFrictionForce : Vector3
 
 
+#-----Acceleration---------
+var accerlation : float = 100
+@export var isMotor : bool
+
+var forwardsForceMag : float = 0
+var forwardsForce : Vector3 = Vector3.ZERO
+
+var targetDir : int = 0
+
 func _physics_process(_delta):
 	if not is_colliding():
 		return
@@ -48,26 +57,36 @@ func _physics_process(_delta):
 
 	# Get updated spring direction
 	upDir = (origin - collisionPoint).normalized()
+	forwardDir = -global_transform.basis.z.normalized()
+	lateralDir = upDir.cross(-forwardDir).normalized()
 
-	#  Update lateralDir now that upDir changed
-	forwardDir = global_transform.basis.z.normalized()
-	lateralDir = upDir.cross(forwardDir).normalized()
+	#-----Lateral friction-----
 
 	# Wheel velocity at this wheel
 	wheelVelocity = car.linear_velocity + car.angular_velocity.cross(applyPos)
 	lateralSpeed = wheelVelocity.dot(lateralDir)
 	lateralFrictionForce = -lateralSpeed * grip * lateralDir
 
-	# Suspension forces
+
+	#------Suspension--------
+
 	length = (origin - collisionPoint).length()
 	extension = restLen - length
-	speed = wheelVelocity.dot(upDir)
+	springSpeed = wheelVelocity.dot(upDir)
 
 	springForce = springConst * extension
-	dampForce = -speed * damping
-	springForce = clamp(springForce + dampForce, -maxForce, maxForce)
+	dampForce = -springSpeed * damping
 
-	overallForce = upDir * springForce + lateralFrictionForce
+	springForce = clamp(springForce + dampForce, -maxSuspension, maxSuspension)
+
+	#-----Acceleration------
+
+	if isMotor:
+		targetDir = Input.get_axis("Decelerate", "Accelerate")
+		forwardsForce = forwardDir * accerlation * targetDir
+
+
+	overallForce = (upDir * springForce) + lateralFrictionForce + forwardsForce
 	car.apply_force(overallForce, applyPos)
 
 

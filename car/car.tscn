@@ -44,9 +44,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.20003, 2.38419e-07, 2.4371
 target_position = Vector3(0, -1.5, 0)
 script = ExtResource("2_dxy33")
 car = NodePath("../..")
+isMotor = true
 
 [node name="BackRight" type="RayCast3D" parent="Wheels" node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.19997, 2.38419e-07, 2.43718)
 target_position = Vector3(0, -1.5, 0)
 script = ExtResource("2_dxy33")
 car = NodePath("../..")
+isMotor = true
