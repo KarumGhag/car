@@ -20,7 +20,6 @@ var handbrake : bool = false
 
 func _ready():
 	wheels = [FL, FR, BL, BR]
-	print(forwardDir, upDir, lateralDir)
 
 	
 
@@ -33,7 +32,6 @@ func _physics_process(delta):
 
 	if Input.is_action_pressed("Handbrake"):
 		handbrake = true
-		print("true")
 
 
 	else:
@@ -48,8 +46,11 @@ func _physics_process(delta):
 
 
 	for wheel in wheels:
+		wheel.force_raycast_update()
 		if not wheel.is_colliding():
 			continue
+
+		wheel.target_position.y = -(wheel.restLen + (wheel.restLen / 2) + 1)
 		
 		wheel.setValues()
 

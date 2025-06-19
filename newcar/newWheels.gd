@@ -51,7 +51,7 @@ var lateralFriction : Vector3
 #----Turning----
 var maxAngle : float = 35
 var currentAngle : float = 0
-var turnSpeed : float = 1.0 / 50
+var turnSpeed : float = 1.0 / 35
 
 func setValues() -> void:
 	carPos = car.global_position
@@ -107,10 +107,9 @@ func getAccelForce() -> Vector3:
 	var input : int = Input.get_axis("Decelerate", "Accelerate")
 	var forwardForce : Vector3 = move_toward(Vector3.ZERO.dot(forwardDir), maxSpeed * input, acceleration) * forwardDir.normalized()
 
-	print(forwardForce)
-
 	if input:
 		projectedForce = forwardForce - get_collision_normal() * forwardForce.dot(get_collision_normal())
+
 
 	elif projectedForce != Vector3.ZERO:
 		projectedForce = move_toward(projectedForce.dot(forwardDir), Vector3.ZERO.dot(forwardDir), acceleration / 2) * forwardDir
@@ -129,6 +128,6 @@ func steer() -> void:
 	var overallMax : float = int(car.handbrake) * 5
 
 	if isFront:
-		currentAngle = lerp(currentAngle, steerInput * (maxAngle + overallMax), turnSpeed + abs(currentSpeed / 1000))
+		currentAngle = lerp(currentAngle, steerInput * (maxAngle + overallMax), turnSpeed - abs(currentSpeed / 15000))
 
 		rotation.y = deg_to_rad(currentAngle)
