@@ -1,41 +1,93 @@
-[gd_scene load_steps=5 format=3 uid="uid://c6yunir026dec"]
+[gd_scene load_steps=13 format=3 uid="uid://c6yunir026dec"]
 
 [ext_resource type="Script" uid="uid://cyre6qkwo1x2y" path="res://newcar/new_car.gd" id="1_lai87"]
+[ext_resource type="Texture2D" uid="uid://cicf6mlkt4fmy" path="res://addons/kenney_prototype_textures/red/texture_09.png" id="2_cd8ww"]
 [ext_resource type="Script" uid="uid://dgatqknjoakay" path="res://newcar/newWheels.gd" id="2_juohu"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_2th2i"]
 size = Vector3(3, 0.5, 2)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_juohu"]
+albedo_texture = ExtResource("2_cd8ww")
+uv1_triplanar = true
+uv2_triplanar = true
+uv2_world_triplanar = true
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_lai87"]
 size = Vector3(3, 0.5, 2)
 
-[node name="NewCar" type="RigidBody3D" node_paths=PackedStringArray("FL", "FR", "BL", "BR")]
+[sub_resource type="CylinderMesh" id="CylinderMesh_juohu"]
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.1
+
+[sub_resource type="Gradient" id="Gradient_juohu"]
+offsets = PackedFloat32Array(0.590909, 0.945455)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_cd8ww"]
+gradient = SubResource("Gradient_juohu")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_y54c0"]
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_cd8ww")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1je2"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_eas1y"]
+material = SubResource("StandardMaterial3D_p1je2")
+size = Vector2(0.5, 0.5)
+
+[node name="NewCar" type="RigidBody3D" node_paths=PackedStringArray("FL", "FR", "BL", "BR", "particles")]
 mass = 50.0
 script = ExtResource("1_lai87")
 FL = NodePath("FrontLeft")
 FR = NodePath("FrontRight")
 BL = NodePath("BackLeft")
 BR = NodePath("BackRight")
+particles = [NodePath("GPUParticles3D"), NodePath("GPUParticles3D2")]
 
 [node name="CarBody" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_2th2i")
+surface_material_override/0 = SubResource("StandardMaterial3D_juohu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_lai87")
 
 [node name="FrontLeft" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47406, 0, -1.00369)
 script = ExtResource("2_juohu")
 car = NodePath("..")
+isFront = true
 springConst = 400.0
 dampConst = 50.0
+isMotor = true
+acceleration = 650.0
+lateralGrip = 700.0
+forwardsGrip = 65.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrontLeft"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.480432, 0)
+mesh = SubResource("CylinderMesh_juohu")
 
 [node name="FrontRight" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.50758, 0.0150485, 1.00145)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.48164, 0.0150485, 0.997757)
 script = ExtResource("2_juohu")
 car = NodePath("..")
+isFront = true
 springConst = 400.0
 dampConst = 50.0
+isMotor = true
+acceleration = 650.0
+lateralGrip = 700.0
+forwardsGrip = 65.0
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="FrontRight"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.00758004, -0.49548, 0.0237141)
+mesh = SubResource("CylinderMesh_juohu")
+skeleton = NodePath("../../FrontLeft")
 
 [node name="BackLeft" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.49547, 0.00898743, -0.999132)
@@ -43,6 +95,14 @@ script = ExtResource("2_juohu")
 car = NodePath("..")
 springConst = 400.0
 dampConst = 50.0
+acceleration = 650.0
+lateralGrip = 700.0
+forwardsGrip = 65.0
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="BackLeft"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.00518548, -0.481097, -0.00284272)
+mesh = SubResource("CylinderMesh_juohu")
+skeleton = NodePath("../../FrontLeft")
 
 [node name="BackRight" type="RayCast3D" parent="." node_paths=PackedStringArray("car")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.50583, -0.00119901, 0.968862)
@@ -50,6 +110,28 @@ script = ExtResource("2_juohu")
 car = NodePath("..")
 springConst = 400.0
 dampConst = 50.0
+acceleration = 650.0
+lateralGrip = 700.0
+forwardsGrip = 65.0
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="BackRight"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.07037, -0.479233, 0.0526094)
+mesh = SubResource("CylinderMesh_juohu")
+skeleton = NodePath("../../FrontLeft")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, -4.8579, 0.806776, 0.00586677)
+transform = Transform3D(-4.37114e-08, 0.34202, -0.939693, 0, 0.939693, 0.34202, 1, 1.49502e-08, -4.10753e-08, -7.43271, 3.93478, 0)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61388, -0.646658, -0.996362)
+amount = 1000
+fixed_fps = 140
+process_material = SubResource("ParticleProcessMaterial_y54c0")
+draw_pass_1 = SubResource("PlaneMesh_eas1y")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61388, -0.646658, 1.00799)
+amount = 1000
+fixed_fps = 140
+process_material = SubResource("ParticleProcessMaterial_y54c0")
+draw_pass_1 = SubResource("PlaneMesh_eas1y")

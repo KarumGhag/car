@@ -104,8 +104,5 @@ func applyForce() -> void:
 		overallForce += getAccelForce()
 
 	car.apply_force(overallForce, applyPos)
-	DebugDraw3D.draw_arrow_ray(origin, forwardDir, 1.5, Color.GREEN)
-	DebugDraw3D.draw_arrow_ray(origin, lateralDir, 1.5, Color.BLUE)
-	DebugDraw3D.draw_arrow_ray(origin, upDir, 1.5, Color.YELLOW)
 
 	print(upDir, forwardDir, lateralDir)

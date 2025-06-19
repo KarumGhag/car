@@ -21,7 +21,6 @@ func _physics_process(_delta) -> void:
 			continue
 		wheel.applyForce()
 
-	DebugDraw3D.draw_arrow_ray(global_position, linear_velocity / 10, 100, Color.RED)
 
 func getForwardDir() -> Vector3:
 	return -global_transform.basis.z.normalized()
