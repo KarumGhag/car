@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bebimvxb73a3k"]
+[gd_scene load_steps=7 format=3 uid="uid://bebimvxb73a3k"]
 
-[ext_resource type="PackedScene" uid="uid://c6yunir026dec" path="res://newcar/new_car.tscn" id="2_1tnoa"]
-[ext_resource type="PackedScene" uid="uid://c0yvknqlkmvo3" path="res://Models/road.blend" id="4_5hvw7"]
+[ext_resource type="PackedScene" uid="uid://c6yunir026dec" path="res://newcar/car.tscn" id="2_1tnoa"]
+[ext_resource type="PackedScene" uid="uid://cdw5d7e0mfnx3" path="res://Models/f1track.blend" id="2_qcaji"]
+[ext_resource type="Script" uid="uid://bdfg78oi43duu" path="res://newcar/camFollow.gd" id="3_qcaji"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_25vv4"]
 
@@ -18,10 +19,14 @@ sky = SubResource("Sky_jeodi")
 environment = SubResource("Environment_1tnoa")
 
 [node name="NewCar" parent="WorldEnvironment" instance=ExtResource("2_1tnoa")]
-transform = Transform3D(-4.37114e-08, 0, 0.999999, 0, 1, 0, -0.999999, 0, -4.37114e-08, 0.189072, 1.93226, 0.181671)
+transform = Transform3D(0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0.189072, 1.93226, -0.289106)
 drawForces = false
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.104528, 0.994522, 0, -0.994522, 0.104528, 0, 43.4012, 52.087)
 
-[node name="road" parent="WorldEnvironment" instance=ExtResource("4_5hvw7")]
+[node name="f1track" parent="." instance=ExtResource("2_qcaji")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.126026, 0, 0.992027, 0, 1, 0, -0.992027, 0, 0.126026, 0, 4.59536, 0)
+script = ExtResource("3_qcaji")

@@ -40,14 +40,15 @@ vertex_color_use_as_albedo = true
 material = SubResource("StandardMaterial3D_p1je2")
 size = Vector2(0.5, 0.5)
 
-[node name="NewCar" type="RigidBody3D" node_paths=PackedStringArray("FL", "FR", "BL", "BR", "particles")]
-mass = 90.0
+[node name="Car" type="RigidBody3D" node_paths=PackedStringArray("FL", "FR", "BL", "BR", "particles", "camTargetNode")]
+mass = 100.0
 script = ExtResource("1_lai87")
 FL = NodePath("FrontLeft")
 FR = NodePath("FrontRight")
 BL = NodePath("BackLeft")
 BR = NodePath("BackRight")
 particles = [NodePath("GPUParticles3D"), NodePath("GPUParticles3D2")]
+camTargetNode = NodePath("CameraPos")
 
 [node name="CarBody" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_2th2i")
@@ -66,8 +67,9 @@ springConst = 700.0
 dampConst = 70.0
 isMotor = true
 acceleration = 650.0
+maxSpeed = 3500.0
 lateralGrip = 700.0
-forwardsGrip = 63.0
+forwardsGrip = 60.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="FrontLeft"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.480432, 0)
@@ -83,8 +85,9 @@ springConst = 700.0
 dampConst = 70.0
 isMotor = true
 acceleration = 650.0
+maxSpeed = 3500.0
 lateralGrip = 700.0
-forwardsGrip = 63.0
+forwardsGrip = 60.0
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="FrontRight"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.00758004, -0.49548, 0.0237141)
@@ -99,8 +102,9 @@ car = NodePath("..")
 springConst = 700.0
 dampConst = 70.0
 acceleration = 650.0
+maxSpeed = 3500.0
 lateralGrip = 700.0
-forwardsGrip = 63.0
+forwardsGrip = 60.0
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="BackLeft"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.00518548, -0.481097, -0.00284272)
@@ -115,27 +119,28 @@ car = NodePath("..")
 springConst = 700.0
 dampConst = 70.0
 acceleration = 650.0
+maxSpeed = 3500.0
 lateralGrip = 700.0
-forwardsGrip = 63.0
+forwardsGrip = 60.0
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="BackRight"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.07037, -0.479233, 0.0526094)
 mesh = SubResource("CylinderMesh_juohu")
 skeleton = NodePath("../../FrontLeft")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0.34202, -0.939693, 0, 0.939693, 0.34202, 1, 1.49502e-08, -4.10753e-08, -7.43271, 3.93478, 0)
-
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61388, -0.646658, -0.996362)
-amount = 1000
+amount = 500
 fixed_fps = 140
 process_material = SubResource("ParticleProcessMaterial_y54c0")
 draw_pass_1 = SubResource("PlaneMesh_eas1y")
 
 [node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61388, -0.646658, 1.00799)
-amount = 1000
+amount = 500
 fixed_fps = 140
 process_material = SubResource("ParticleProcessMaterial_y54c0")
 draw_pass_1 = SubResource("PlaneMesh_eas1y")
+
+[node name="CameraPos" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 4, 0)

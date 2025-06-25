@@ -1,5 +1,6 @@
 extends RayCast3D
 
+class_name Wheel
 
 @export var car : RigidBody3D
 @export var isFront : bool = false
